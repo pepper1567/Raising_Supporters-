@@ -131,18 +131,19 @@ function fight(o){let st=stats(),c=cls(),s=o.s,raid=o.m=='raid',lm=1+.1*(S.lv-1)
  let m=pl.map(id=>{let q=pst(id),h=(250+30*s)*q.h*(1+st.pa)*lm;return{cid:id,n:CH[id].n,ic:CH[id].i,mhp:h,hp:h,sh:h*st.sh*.5,atk:(6+2*s)*q.a*(1+st.atk)*lm,iv:q.i,at:q.i*Math.random()}}),
  ah=m.reduce((a,x)=>a+x.mhp,0)/o.n/(lm*(1+st.pa)),pd=m.reduce((a,x)=>a+x.atk/x.iv,0)/(lm*(1+st.atk)),nE=raid?1:Math.min(5,1+(s/4|0)),M=(q=>{let k=(o.mm||1)*(o.dm||1);q.atk*=k;q.hp*=k;return q})(ms(o.ms||s)),
  E=[...Array(nE)].map((_,i)=>{let b=bs&&i==0,k=b?(s/5-1)%3|0:-1;return{n:b?['광폭한 오우거','포효하는 드래곤','마나 포식자'][k]:'적'+(i+1),ic:b?'👑':'👹',boss:b,k,sp:8,atk:M.atk*(nE>1?.75:1)*(b?1.3:1),iv:M.iv*(b?1.2:1),cd:2+i*.6,tg:-1,tt:0,hp:raid?1e12:M.hp*(b?2:1)/(nE+(bs?1:0)),wk:0,sl:0,dot:0}});E.forEach(e=>e.mhp=e.hp);if(raid){let rk=rwb(),e=E[0];e.rk=rk;e.n=BOSS[rk][0];e.ic=BOSS[rk][1];e.atk=M.atk*[.8,.6,1,1][rk];e.iv=M.iv*1.2;e.cc=8;e.boss=false;e.k=-1}
- B={o,st,c,m,E,pd,te:0,ft:0,ob:0,t:0,mp:st.mp,time:o.t,el:0,es:0,dmg:0,over:0,cast:0,sc:0,fa:0,wc:0,vu:0,pause:o.tut,au:S.au&&S.mx>=8&&!o.tut?1:0,ai:0,surv:st.surv>0?1:0,ks:S.sl.map(x=>x?{d:sk(x[1]),lv:S.sk[x[1]].lv,c:0}:null)};
- $('#bt').hidden=0;$('#bt').innerHTML=`<div id=ob class=ob>💚 오버힐 +0%</div><div class=h><b>${o.m=='st'?'스테이지 '+s+(bs?' (보스)':'')+(o.hm==1?' 🔥하드':o.hm==2?' 💀헬':''):{day:'요일 던전',enh:'강화 던전',raid:'레이드'}[o.m]}</b><span><button id=au onclick=auT()></button> <span id=btt></span></span></div>
+ B={o,st,c,m,E,pd,te:0,ft:0,ob:0,t:0,mp:st.mp,time:o.t,el:0,es:0,dmg:0,over:0,cast:0,sc:0,fa:0,wc:0,vu:0,pause:o.tut,au:S.au&&S.mx>=6&&!o.tut?1:0,ai:0,sp:S.mx>=6&&!o.tut?SPD[S.sp|0]||1:1,surv:st.surv>0?1:0,ks:S.sl.map(x=>x?{d:sk(x[1]),lv:S.sk[x[1]].lv,c:0}:null)};
+ $('#bt').hidden=0;$('#bt').innerHTML=`<div id=ob class=ob>💚 오버힐 +0%</div><div class=h><b>${o.m=='st'?'스테이지 '+s+(bs?' (보스)':'')+(o.hm==1?' 🔥하드':o.hm==2?' 💀헬':''):{day:'요일 던전',enh:'강화 던전',raid:'레이드'}[o.m]}</b><span><button id=au onclick=auT()></button> <span id=btt></span></span></div>${o.tut?'':`<div style="display:flex;align-items:center;gap:6px;margin:4px 0">${S.mx>=6?`⏩ 배속 <input type=range id=sp min=0 max=6 step=1 value=${S.sp|0} oninput="spC(this.value)" style="flex:1"> <b id=spl style="min-width:48px;text-align:right">×${SPD[S.sp|0]||1}</b>`:'<small>🔒 자동 전투·배속은 스테이지 6 클리어 시 열려요</small>'}</div>`}
 <div class=pt id=es>${E.map((e,i)=>`<div id=e${i} onclick="selE(${i})"><div class=ic>${e.ic}</div>${e.n}<div class=bar><i id=eh${i} style="background:#e55"></i></div><small id=et${i}></small></div>`).join('')}</div><small id=eht></small>
 <div class=pt id=pp style="margin-top:8px">${m.map((x,i)=>`<div id=m${i} onclick="selT(${i})"><div class=ic>${x.ic}</div>${x.n}<div class=bar><i id=h${i}></i></div><small id=t${i}></small></div>`).join('')}</div><div id=lg class=lg></div>
 <div class=bar><i id=mn style="background:#58f"></i></div><div class="row tr"><button onclick=tgt(-1)>◀</button><b id=ctn>대상</b><button onclick=tgt(1)>▶</button></div><div class=bar><i id=cs style="background:#fa3"></i></div>
-<div class=row id=ks>${B.ks.map((k,i)=>k?`<button id=k${i} onclick=cast(${i}) onpointerenter=hv(event,${i},1) onpointerleave=hv(event,${i},0) onpointerdown=lp(event,${i}) onpointerup=lpe() onpointercancel=lpe() oncontextmenu="return false">${i+1}. ${k.d.n}<br><small id=kc${i}></small></button>`:'').join('')}</div><div id=sdp hidden class=c></div>`;B.iv=setInterval(tick,50);ui()}
+<div class=row id=ks>${B.ks.map((k,i)=>k?`<button id=k${i} onclick=cast(${i}) onpointerenter=hv(event,${i},1) onpointerleave=hv(event,${i},0) onpointerdown=lp(event,${i}) onpointerup=lpe() onpointercancel=lpe() oncontextmenu="return false">${i+1}. ${k.d.n}<br><small id=kc${i}></small></button>`:'').join('')}</div><div id=sdp hidden class=c></div>`;B.iv=setInterval(()=>{let b=B;if(!b||b.over)return;let n=b.sp||1;for(let i=0;i<n;i++){PQ=i<n-1;tick();if(B!==b||b.over)break}PQ=false},50);ui()}
 const say=t=>{let l=$('#lg');if(l)l.textContent=t},tgt=d=>{if(!ok('tgt'))return;let b=B,L=[...b.m.map((_,i)=>['a',i]),...b.E.map((e,i)=>['e',i]).filter(x=>b.E[x[1]].hp>0&&!b.o.tut)],c=b.ft?L.findIndex(x=>x[0]=='e'&&x[1]==b.te):b.t,k=L[((c<0?0:c)+d+L.length)%L.length];if(k[0]=='a'){b.t=k[1];b.ft=0}else{b.te=k[1];b.ft=1}td('tgt')},dm=(x,p,t)=>{let e=t||B.E.find(e=>e.hp>0);if(e){e.hp-=x;if(e.ch)e.ch.got+=x;if(p)pop('e'+B.E.indexOf(e),'-'+(x|0),'#e53')}B.dmg+=x},atk=x=>dm((x.atk+(x.ab?x.ab.v:0))*(1+(B.vu?B.vu.v:0)),1);
 document.onkeydown=e=>{if(!B||B.over||$('#bt').hidden)return;if(e.key>='1'&&e.key<='4')cast(+e.key-1);if(e.key=='ArrowLeft')tgt(-1);if(e.key=='ArrowRight')tgt(1)};
 function selT(i){if(!ok('tgt'))return;B.t=i;B.ft=0;td('tgt')}
 function selE(i){if(!ok('tgt'))return;if(B.E[i].hp<=0)return;B.te=i;B.ft=1;td('tgt')}
 function cast(i){let b=B,k=b&&b.ks[i];if(!k||b.over)return;if(b.lp&&Date.now()-b.lp<600)return;if(!ok('cast'+i))return;if(b.pause||b.cast||k.c>0||b.mp<k.d.mp)return;if(b.ft&&k.d.fx.some(x=>!'amwlptcvzM'.includes(x[0]))){toast('적에게는 이 스킬을 쓸 수 없어요');return}b.mp-=k.d.mp;let ct=k.d.ct*(1-b.st.ch/100);b.cast={k,t:ct,T:ct,tg:b.t,i};say(k.d.n+' 시전…');if(ct<=.01)done()}
-function auT(){if(S.mx<8)return alert('스테이지 8을 클리어하면 자동 전투가 열려요');if(!B||B.over||B.o.tut)return;B.au=B.au?0:1;S.au=B.au;ui();sv()}
+function spC(v){if(S.mx<6)return alert('스테이지 6을 클리어하면 배속이 열려요');v=Math.max(0,Math.min(6,+v|0));S.sp=v;if(B&&!B.o.tut)B.sp=SPD[v];let l=$('#spl');if(l)l.textContent='×'+SPD[v];sv()}
+function auT(){if(S.mx<6)return alert('스테이지 6을 클리어하면 자동 전투와 배속이 열려요');if(!B||B.over||B.o.tut)return;B.au=B.au?0:1;S.au=B.au;ui();sv()}
 function autoCast(){let b=B;if(!b||b.over||b.cast||b.pause)return;
  let al=b.m.map((x,i)=>i).filter(i=>b.m[i].hp>0).sort((x,y)=>b.m[x].hp/b.m[x].mhp-b.m[y].hp/b.m[y].mhp)[0],
  en=b.E.map((e,i)=>i).filter(i=>b.E[i].hp>0).sort((x,y)=>b.E[x].hp-b.E[y].hp)[0];
@@ -172,8 +173,8 @@ function tick(){if(!B||B.over||B.pause)return;let b=B,dt=.05,st=b.st,rd=b.o.m=='
  b.E.forEach(e=>{if(e.hp<=0){e.tg=-1;e.ch=0;return}if(b.over)return;['wk','sl'].forEach(k=>{if(e[k]&&(e[k].t-=dt)<=0)e[k]=0});if(e.dot){e.hp-=e.dot.v*dt;b.dmg+=e.dot.v*dt;if(e.ch)e.ch.got+=e.dot.v*dt;if((e.dot.t-=dt)<=0)e.dot=0}
   if(e.boss&&(e.sp-=dt)<=0){e.sp=8;spec(e)}if(b.over)return;if(e.fz>0){e.fz-=dt;return}if(e.rk>=2&&rc(e,dt))return;
   if(e.tg<0){if((e.cd-=dt*(e.sl?1-e.sl.v:1)*(rd?1+.1*(b.el/10|0):1))<=0){let al=b.m.map((x,i)=>x.hp>0?i:-1).filter(i=>i>=0);e.tg=b.tn&&b.m[b.tn.i].hp>0?b.tn.i:al[Math.random()*al.length|0];e.tt=1.2}}else if((e.tt-=dt)<=0){let i=e.tg;e.tg=-1;e.cd=e.iv;hurt(i,e)}});
- if(b.over)return;ui();if(b.o.tut)return;if(!rd&&b.E.every(e=>e.hp<=0))end(1);else if(!rd&&b.time<=0)end(1)}
-function ui(){let b=B,rd=b.o.m=='raid',au=$('#au');if(au){au.textContent=S.mx<8?'🔒 자동':b.au?'⚙ 자동 ON':'⚙ 자동 OFF';au.className=b.au?'on':''}$('#btt').textContent=rd?`⏱ ${b.el.toFixed(1)}s 생존`:`⏱ ${Math.max(0,b.time).toFixed(1)}s`;$('#eht').textContent=rd?`누적 데미지 점수 ${pt(b.dmg)} · 광폭 ${b.el/10|0}단계 (피해 +${(b.el/10|0)*20}% · 공격속도 +${(b.el/10|0)*10}%)`:'';
+ if(b.over)return;if(!PQ)ui();if(b.o.tut)return;if(!rd&&b.E.every(e=>e.hp<=0))end(1);else if(!rd&&b.time<=0)end(1)}
+function ui(){let b=B,rd=b.o.m=='raid',au=$('#au');if(au){au.textContent=S.mx<6?'🔒 자동':b.au?'⚙ 자동 ON':'⚙ 자동 OFF';au.className=b.au?'on':''}$('#btt').textContent=rd?`⏱ ${b.el.toFixed(1)}s 생존`:`⏱ ${Math.max(0,b.time).toFixed(1)}s`;$('#eht').textContent=rd?`누적 데미지 점수 ${pt(b.dmg)} · 광폭 ${b.el/10|0}단계 (피해 +${(b.el/10|0)*20}% · 공격속도 +${(b.el/10|0)*10}%)`:'';
  b.E.forEach((e,i)=>{$('#e'+i).style.opacity=e.hp>0?1:.25;$('#e'+i).className=b.ft&&b.te==i&&e.hp>0?'on':'';$('#eh'+i).style.width=(rd?100:Math.max(0,e.hp)/e.mhp*100)+'%';$('#et'+i).textContent=e.hp<=0?'처치':e.ch?`⚡ ${e.rk==2?'차징 피해 '+(e.ch.got|0)+'/'+(e.ch.need|0):'차징'} ${e.ch.t.toFixed(1)}s`:e.tg>=0?`⚠→${b.m[e.tg].n} ${e.tt.toFixed(1)}s`:'…'+(e.wk?' ⬇공':'')+(e.sl?' 🐌':'')});
  b.m.forEach((x,i)=>{$('#m'+i).className=(i==b.t&&!b.ft?'on ':'')+(b.E.some(e=>e.hp>0&&e.tg==i)?'hit ':'')+(x.hp<=0?'dead':'');$('#h'+i).style.width=Math.max(0,x.hp)/x.mhp*100+'%';$('#t'+i).textContent=`${Math.max(0,x.hp)|0}/${x.mhp|0}${x.sh>0?' 🛡'+(x.sh|0):''}${x.ab?' ⚔':''}${x.hs?' ⚡':''}${x.dr>0?' 🔰':''}${x.hot?' ✚':''}${x.bd?' ☠':''}`});
  $('#mn').style.width=b.mp/b.st.mp*100+'%';if(b.ft&&(!b.E[b.te]||b.E[b.te].hp<=0)){let n=b.E.findIndex(e=>e.hp>0);if(n<0)b.ft=0;else b.te=n}$('#ctn').textContent=b.ft?'🎯 '+b.E[b.te].n:'🛡 '+b.m[b.t].n;$('#ob').textContent='💚 오버힐 +'+f(b.ob)+'%';$('#cs').style.width=b.cast?(1-b.cast.t/b.cast.T)*100+'%':0;
@@ -212,7 +213,7 @@ const TS=[['적 HP는 화면 위쪽에 표시돼요. 모든 적을 처치하거�
 ['튜토리얼 끝! 보상 💎2000을 드렸어요. 스테이지 1을 클리어하면 파티원 모집 공고가 열려요! 먼저 스테이지 5까지 클리어해 레벨 5를 달성해 보세요.','','',[]],
 ['레벨 5! 강화 던전이 열렸어요. 하루 3번 입장해 강화용 골드를 얻어요. 이제 레벨 10까지 스테이지를 밀어 보세요.','#nav','',[]],
 ['레벨 10! 요일 던전이 열렸어요. 요일마다 다른 보상을 하루 한 번 받을 수 있어요.','#nav','',[]],
-['🎉 스테이지 8 클리어! 자동 전투가 열렸어요. 전투 화면 오른쪽 위의 [⚙ 자동] 버튼을 누르면 스킬을 자동으로 사용해요. 한 번 켜 두면 다음 전투에도 유지되고, 전투 중에도 언제든 끄고 직접 조작할 수 있어요.','#nav','',[]],
+['🎉 스테이지 6 클리어! 자동 전투와 배속이 열렸어요. 전투 화면 오른쪽 위의 [⚙ 자동] 버튼을 누르면 스킬을 자동으로 사용하고, 아래 [⏩ 배속] 슬라이더로 전투 속도를 1·2·4·8·16·32·64배로 바꿀 수 있어요. 설정은 다음 전투에도 유지되고, 전투 중에도 언제든 바꿀 수 있어요.','#nav','',[]],
 ['⚙ 자동 전투 규칙 — ① 아군 대상 스킬은 체력 비율이 가장 낮은 아군에게, 적 대상 스킬(심판·취약·시간 단축 등)은 체력이 가장 적은 적에게 사용해요. ② 스킬 우선도는 1번>2번>3번>4번이고, 마나·쿨타임 때문에 못 쓰면 쓸 수 있는 다음 번호 스킬을 사용해요. ③ 스킬을 쓴 뒤 0.3초 동안은 쉬어요. 스킬 순서를 잘 배치해 보세요!','#nav','',[]]];
 function hl(q){document.querySelectorAll('.hl').forEach(e=>e.classList.remove('hl'));if(q)document.querySelectorAll(q).forEach(e=>e.classList.add('hl'))}
 function ok(a){if(S.rt){if(a=='gR'||a=='tab0')return true;toast('파티원 모집을 먼저 진행해 주세요!');return false}let t=TS[S.tut];if(S.tut>=23||!t||t[2]==a||t[3].includes(a))return true;toast('튜토리얼 중이에요! 해당 동작은 하지 못해요');return false}
@@ -230,12 +231,12 @@ function tgo(i){S.tut=i;let t=TS[i];
  render();hl(t[1]);let b=$('#tb');b.hidden=false;let bt=i<=1||i==21;b.style.top=bt?'auto':'8px';b.style.bottom=bt?'70px':'auto';b.innerHTML=`<p>${t[0]}</p>${t[2]?'<small>↑ 직접 해 보세요</small>':'<button onclick=tnx()>다음</button>'} <a onclick=tskip()>건너뛰기 (보상 없음)</a>`}
 function tnx(){let i=S.tut;if(i>=22&&i!=25){S.tut=i+1;$('#tb').hidden=true;hl('');sv();return}tgo(i+1)}
 function tskip(){S.tut=99;if(B){clearInterval(B.iv);B=0}$('#bt').hidden=true;$('#tb').hidden=true;hl('');render()}
-function tchk(){if((S.tut==23&&S.lv>=5)||(S.tut==24&&S.lv>=10)||(S.tut==25&&S.mx>=8))tgo(S.tut)}
+function tchk(){if((S.tut==23&&S.lv>=5)||(S.tut==24&&S.lv>=10)||(S.tut==25&&S.mx>=6))tgo(S.tut)}
 function tstart(){fight({s:1,t:60,m:'st',tut:1});tgo(0)}
 function selT(i){if(!ok('tgt'))return;B.t=i;B.ft=0;td('tgt')}
 function selE(i){if(!ok('tgt'))return;if(B.E[i].hp<=0)return;B.te=i;B.ft=1;td('tgt')}
 const esc=t=>String(t||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-function pop(id,t,c){let e=document.getElementById(id);if(!e)return;let p=document.createElement('span');p.className='fl';p.style.color=c;p.textContent=t;e.appendChild(p);setTimeout(()=>p.remove(),900)}
+function pop(id,t,c){if(PQ)return;let e=document.getElementById(id);if(!e)return;let p=document.createElement('span');p.className='fl';p.style.color=c;p.textContent=t;e.appendChild(p);setTimeout(()=>p.remove(),900)}
 function prof(){if(!ok('prof'))return;DS=0;$('#pr').hidden=false;pr()}
 function pcl(){if(!ok('pc'))return;$('#pr').hidden=true}
 function pr(){let c=cls(),pc=S.lv<40?S.xp/need(S.lv)*100:100,q=S.eq.map((id,i)=>{let it=S.items.find(x=>x.id==id);return `${IC[i]} ${it?gb(it)+(it.u?' ✦ <small>'+EA[it.a][0]+'</small>':''):'<small>없음</small>'}`});
@@ -284,6 +285,7 @@ const PN=[{id:'p1106a',ti:'11/6 패치',tx:'일일·주간 퀘스트와 연속 �
 PN.push({id:'p1107a',ti:'11/6 패치 3',tx:'모든 적(스테이지·던전·레이드) 기초 스텟 상향(공격력 ×1.5, 체력 ×10) · 던전 몬스터는 내 최고 스테이지 몬스터의 1.5배, 레이드 몬스터는 스테이지 50 수준 · 하드 모드(스테이지 100 클리어 시 해금, 적 ×3, 클리어 시 💎+100)와 헬 모드(스테이지 1000 클리어 시 해금, 적 ×80, 클리어 시 💎+500) 추가 · 스테이지 첫 클리어 💎200(5의 배수 💎300) · 기초 마나 회복 상향 · 디버퍼 스킬 효율 상향 · 파티 탭에서 피로도 1당 🪙5000으로 피로도 소모 · 선물 수량 지정 · 장비 장착 시 스텟 변동 표시 · 프로필에 파티 현황과 하드/헬 최고 스테이지 표시'});
 PN.push({id:'p1106d',ti:'11/6 패치 4',tx:'레이드 광폭화 단계당 피해 증가 +10%→+20% · 광폭 단계마다 보스 공격 속도 +10% · 레이드 데미지 점수에 쉼표와 "점" 표기 · 트로피 X 공유 버튼 삭제 · 가챠 확률 보기 버튼 추가 · 장비 자동 분해 기능(성장 탭) · 패치 알림 날짜 표기 변경 · 1차 배포 테스트 지원금 알림 추가'});
 PN.push({id:'p1106e',ti:'11/6 패치 5',tx:'아크 팔라딘 클래스 효과 변경(방어력 +100%→+50%, 매초 보호막 삭제, 반사 피해 10%→25%) · 자동 전투 추가(스테이지 8 클리어 시 해금, 관련 튜토리얼 추가)'});
+PN.push({id:'p1106f',ti:'11/6 패치 6',tx:'자동 전투 해금 스테이지 8→6 · 배속 기능 추가(전투 속도 1·2·4·8·16·32·64배, 슬라이더로 조절, 스테이지 6 클리어 시 해금)'});
 const GD=new Date(2026,10,7,0,0,0).getTime();
 function gfx(){let n=S.nt.length;S.nt=S.nt.filter(x=>!(x.gf&&Date.now()>=GD));return S.nt.length!=n}
 function pnc(){PN.forEach(p=>{if(!S.pn.includes(p.id)){S.pn.push(p.id);S.nt.unshift({p:1,id:p.id,ti:p.ti,tx:p.tx,g:0})}});S.nt.forEach(n=>{if(n.p){let q=PN.find(x=>x.id==n.id);if(q){n.ti=q.ti;n.tx=q.tx}}});
@@ -309,7 +311,7 @@ function ovh(v){let g=v*.01;B.ob+=g;if(g>=.5)pop('ob','+'+f(g)+'%','#2a9d5c')}
 function oh(x,h){let r=x.mhp-x.hp;x.hp=Math.min(x.mhp,x.hp+h);if(h>r)ovh(h-r)}
 function obd(ob){if(ob<=0)return'';let n=Math.min(30,Math.floor(ob/100)+(Math.random()<(ob%100)/100?1:0)),l=[];for(let i=0;i<n;i++){l.push(gotItem(mi(gr())))}return `<br>💚 오버힐 보너스 ${f(ob)}% → 추가 장비 ${n}개${n?'<br><small>'+l.slice(0,6).join(S.ad&&S.ad.on?'<br>':' ')+(n>6?' …':'')+'</small>':''}`}
 
-let PS=-1,FQ=1;
+let PS=-1,FQ=1,PQ=false;const SPD=[1,2,4,8,16,32,64];
 const f2=x=>(Math.round(x*100)/100).toFixed(2),gbd=g=>`<span class=b style="background:${GRC[g]}">${GRN[g]}</span>`,fat=p=>Math.max(0,Math.min(100,p.fa-Math.floor((Date.now()-p.ft)/6e4))),mbd=id=>`${CH[id].i} ${gbd(S.pc[id].g)}${CH[id].n}`;
 function bneed(l){return Math.round(100*Math.pow(1.25,l))}
 function addBond(p,n){if(p.bl>=20)return;p.bx+=n;while(p.bl<20&&p.bx>=bneed(p.bl)){p.bx-=bneed(p.bl);p.bl++}if(p.bl>=20)p.bx=0}
