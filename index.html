@@ -123,7 +123,7 @@ function adT(){S.ad.on=S.ad.on?0:1;sv();render()}
 function adG(g){S.ad.g=g;sv();render()}
 function dis(){if(!ok('dis'))return;let it=S.items.find(i=>i.id==SI);if(!it)return;if(S.eq[it.s]==it.id)return alert('장착 중인 장비는 분해할 수 없습니다');if(it.cn)return alert('이벤트 장비는 분해할 수 없습니다');if(inPre(it.id))return pcf(`${gb(it)} 해당 장비는 프리셋에 저장되어 있는 장비입니다. 분해한다면 해당 프리셋을 불러올 때 해당 장비를 불러오지 않습니다. 분해하시겠습니까?`,()=>disDo(it.id),'분해');disDo(it.id)}
 function disDo(id){let it=S.items.find(i=>i.id==id);if(!it||S.eq[it.s]==id)return;S.ef+=FV[it.g];if(it.u)kp(1);S.items=S.items.filter(i=>i!=it);SI=0;render()}
-function ew(){if(!ok('ew'))return;let it=S.items.find(i=>i.id==SI);if(!it||it.lv>=20)return;let ev=!!it.cn,c=gc(it.lv),n=it.lv+2;if(S.gold<c||(ev?(S.evd.dc|0)<n:S.ef<n))return alert(ev?'골드 또는 빼빼로 장식이 부족합니다':'골드 또는 장비 파편이 부족합니다');S.gold-=c;if(ev)S.evd.dc-=n;else S.ef-=n;it.lv++;qw('upg');render();td('ew')}
+function ew(){if(!ok('ew'))return;let it=S.items.find(i=>i.id==SI);if(!it||it.lv>=40)return;let ev=!!it.cn,c=gc(it.lv),n=it.lv+2;if(S.gold<c||(ev?(S.evd.dc|0)<n:S.ef<n))return alert(ev?'골드 또는 빼빼로 장식이 부족합니다':'골드 또는 장비 파편이 부족합니다');S.gold-=c;if(ev)S.evd.dc-=n;else S.ef-=n;it.lv++;qw('upg');render();td('ew')}
 function skill(){let o=KT?S.ps:S.sk,t=KT?'p':'s',nf=i=>KT?PL[i][0]:sk(i).n,cm=(a,b)=>nf(a).localeCompare(nf(b),'ko'),ids=Object.keys(o).map(Number).filter(i=>SS<0||(KT?PL[i][3]:sk(i).s)==SS).filter(i=>!SQ||nf(i).toLowerCase().includes(SQ.toLowerCase())).sort((a,b)=>SD*(SK?(o[a].lv-o[b].lv||cm(a,b)):cm(a,b)));
  return `<div class=c><b>${cls().n}</b> <small>${ce()}</small><br><small>스킬 파편 ${S.ss} · 패시브 파편 ${S.pf} (공용)</small><br><small>스킬 슬롯 (최대 4)</small><div class=g3 style="grid-template-columns:repeat(2,1fr)">${S.sl.map((x,i)=>`<div class="s ${SEL==i?'on':''}" onclick="SEL=${i};render()">${x?nm(x)+` <a onclick="event.stopPropagation();ok('rm')&&(S.sl[${i}]=null,render())">✕</a>`:'<small>비어 있음</small>'}</div>`).join('')}</div><small>패시브 슬롯 (스킬과 별개, 최대 4)</small><div class=g3 style="grid-template-columns:repeat(2,1fr)">${S.pl.map((x,i)=>`<div class="s ${SELP==i?'on':''}" onclick="SELP=${i};render()">${x?nm(x)+` <a onclick="event.stopPropagation();ok('rm')&&(S.pl[${i}]=null,render())">✕</a>`:'<small>비어 있음</small>'}</div>`).join('')}</div><small>칸을 고른 뒤 아래 목록에서 장착하세요.</small></div>
 ${prCard('pk')}
@@ -265,7 +265,7 @@ const EVS=[
  EVSH=[
  {id:'w',p:11,n:'[이벤트] 등급 무기 "빼빼로"',lim:1},
  {id:'tr',p:10,n:'동료 소환권 5개',lim:2},
- {id:'g7',p:10,n:'골드 10,000,000',lim:1},
+ {id:'g7',p:10,n:'골드 1,000,000',lim:1},
  {id:'dia',p:5,n:'다이아 1,000개',lim:3},
  {id:'te',p:5,n:'장비 뽑기권 5개',lim:10},
  {id:'ts',p:5,n:'스킬 뽑기권 3개',lim:5},
@@ -294,8 +294,9 @@ function evAr(m){if(!ok('go'))return;if(S.mx<6)return alert('스테이지 6을 �
 function evBuy(id,one){evInit();let x=EVSH.find(y=>y.id==id),d=S.evd;if(!x||!evAct('pp'))return alert('이벤트 기간이 아니에요');let u=d.buy[id]|0,n=one?1:Math.floor(d.pj/x.p);if(x.lim)n=Math.min(n,x.lim-u);if(n<1||d.pj<x.p*n)return alert(x.lim&&u>=x.lim?'교환 가능 횟수를 모두 사용했어요':'빼빼로 조각이 부족해요');
  d.pj-=x.p*n;d.buy[id]=u+n;
  if(id=='w'){let it={id:S.nid++,s:0,g:4,lv:0,n:0,a:Math.random()*EA.length|0,u:0,cn:'빼빼로'};S.items.push(it)}
- else if(id=='tr')S.tk.r+=5*n;else if(id=='g7')S.gold+=1e7*n;else if(id=='dia')S.dia+=1000*n;else if(id=='te')S.tk.e+=5*n;else if(id=='ts')S.tk.s+=3*n;else if(id=='tp')S.tk.p+=3*n;else if(id=='dc')d.dc+=n;else if(id=='g4')S.gold+=1e4*n;
+ else if(id=='tr')S.tk.r+=5*n;else if(id=='g7')S.gold+=1e6*n;else if(id=='dia')S.dia+=1000*n;else if(id=='te')S.tk.e+=5*n;else if(id=='ts')S.tk.s+=3*n;else if(id=='tp')S.tk.p+=3*n;else if(id=='dc')d.dc+=n;else if(id=='g4')S.gold+=1e4*n;
  sv();toast(`🍫 ${x.n}${n>1?' ×'+n:''} 교환 완료!`);render();evRender()}
+function claimA(i){let n=S.nt[i];if(!n||!n.ap||n.g)return;if(Date.now()>=AD){gfx();nl();return alert('수령 기간이 끝났어요')}n.g=1;S.dia+=n.d;toast('🙇 사과 보상 💎'+n.d+' 수령!');sv();nl();render()}
 function claimE(i){let n=S.nt[i];if(!n||!n.ev||n.g)return;n.g=1;S.gold+=n.c;sv();nl();render()}
 function evChk(){if(!S.ok||S.tut<23)return;evInit();let t=Date.now(),d=S.evd,ch=0;
  EVS.forEach(e=>{if(t>=e.e&&!d.done[e.id]){d.done[e.id]=1;ch=1;if(e.id=='pp'&&d.pj>0){let n=d.pj;d.pj=0;S.nt.unshift({ev:1,ti:'🍫 빼빼로 데이 종료 정산',tx:`이벤트가 종료되어 남은 빼빼로 조각 ${n}개가 1개당 골드 10,000개로 정산되었어요.`,c:n*10000,g:0});toast('🔔 이벤트 정산 알림이 도착했어요')}}});
@@ -353,7 +354,7 @@ function rc(e,dt){let b=B;if(e.ch){e.ch.t-=dt;if(e.ch.t<=0){e.ch=0;e.cc=14;b.m.f
 function ck(m){let b=B;if(m.hp<=0){if(b.surv>0){b.surv=0;m.hp=m.mhp*.3}else{m.dd=1;end(0)}}}
 function settle(){let c=rw();if(S.rs==null)S.rs=c-1;if(S.rs>=c-1)return;let n=0;for(let w=S.rs+1;w<c;w++){let q=S.rr[w];if(q&&q.t>=30){S.nt.unshift({w,b:q.b,t:Math.floor(q.t),d:Math.floor(q.d),g:0});n++}}S.rs=c-1;S.nt=S.nt.slice(0,30);sv();if(n){toast('🔔 주간 레이드 보상이 도착했어요!');render()}}
 function nt(){if(!ok('tab4'))return;$('#nl').hidden=false;nl()}
-function nl(){gfx();$('#nl').innerHTML=`<div class=c><b>🔔 알림</b></div>${S.nt.length?S.nt.map((n,i)=>n.p?`<div class=c>📝 <b>${n.ti}</b><br><small>${n.tx}</small></div>`:n.ev?`<div class=c>🎉 <b>${n.ti}</b><br><small>${n.tx}</small><br>🪙${n.c.toLocaleString('ko-KR')}<br>${n.g?'<small>수령 완료</small>':`<button onclick=claimE(${i})>골드 받기</button>`}</div>`:n.gf?`<div class=c>🎁 <b>${n.ti}</b><br><small>${n.tx}</small><br>💎${n.d.toLocaleString('ko-KR')} · 🪙${n.c.toLocaleString('ko-KR')}<br><small>11/6 24시(11/7 00시)까지 수령 가능 · 이후 자동 삭제</small><br>${n.g?'<small>수령 완료</small>':`<button onclick=claimG(${i})>보상 받기</button>`}</div>`:`<div class=c>🏆 ${sea(n.w)} 레이드 주간 보상<br><small>${BOSS[n.b][0]} · ${n.t}초 · 데미지 점수 ${pt(n.d)}</small><br>${n.g?'<small>수령 완료 (트로피 탭)</small>':`<button onclick=claim(${i})>트로피 2개 받기</button>`}</div>`).join(''):'<div class=c><small>알림이 없어요</small></div>'}<button onclick="$('#nl').hidden=true;render()">닫기</button>`;S.nt.forEach(n=>{if(n.p)n.g=1})}
+function nl(){gfx();$('#nl').innerHTML=`<div class=c><b>🔔 알림</b></div>${S.nt.length?S.nt.map((n,i)=>n.p?`<div class=c>📝 <b>${n.ti}</b><br><small>${n.tx}</small></div>`:n.ap?`<div class=c>🙇 <b>${n.ti}</b><br><small>${n.tx}</small><br>💎${n.d.toLocaleString('ko-KR')}<br><small>빼빼로 데이 후야제 종료(11/19 00:00)까지 수령 가능 · 이후 자동 삭제</small><br>${n.g?'<small>수령 완료</small>':`<button onclick=claimA(${i})>다이아 받기</button>`}</div>`:n.ev?`<div class=c>🎉 <b>${n.ti}</b><br><small>${n.tx}</small><br>🪙${n.c.toLocaleString('ko-KR')}<br>${n.g?'<small>수령 완료</small>':`<button onclick=claimE(${i})>골드 받기</button>`}</div>`:n.gf?`<div class=c>🎁 <b>${n.ti}</b><br><small>${n.tx}</small><br>💎${n.d.toLocaleString('ko-KR')} · 🪙${n.c.toLocaleString('ko-KR')}<br><small>11/6 24시(11/7 00시)까지 수령 가능 · 이후 자동 삭제</small><br>${n.g?'<small>수령 완료</small>':`<button onclick=claimG(${i})>보상 받기</button>`}</div>`:`<div class=c>🏆 ${sea(n.w)} 레이드 주간 보상<br><small>${BOSS[n.b][0]} · ${n.t}초 · 데미지 점수 ${pt(n.d)}</small><br>${n.g?'<small>수령 완료 (트로피 탭)</small>':`<button onclick=claim(${i})>트로피 2개 받기</button>`}</div>`).join(''):'<div class=c><small>알림이 없어요</small></div>'}<button onclick="$('#nl').hidden=true;render()">닫기</button>`;S.nt.forEach(n=>{if(n.p)n.g=1})}
 function claim(i){let n=S.nt[i];if(!n||n.g)return;n.g=1;S.tp.push({id:S.nid++,k:'t',w:n.w,b:n.b,v:n.t,ts:Date.now()},{id:S.nid++,k:'d',w:n.w,b:n.b,v:n.d,ts:Date.now()});sv();nl();render()}
 function trophy(){let d=S.tp.find(t=>t.id==TD);
  if(d)return `<div class=c style="text-align:center"><div style="font-size:64px">🏆</div><h3>${tl(d)}</h3>레이드 기간 ${wr(d.w)}<br>보스 ${BOSS[d.b][1]} ${BOSS[d.b][0]}<br>${d.k=='t'?'버틴 시간 '+d.v+'초':'데미지 점수 '+pt(d.v)}<br><small>획득 ${new Date(d.ts).toLocaleDateString('ko-KR')}</small></div><button onclick="TD=0;render()">← 목록</button><div style="position:fixed;left:0;right:0;bottom:calc(56px + env(safe-area-inset-bottom,0px));text-align:center"><button onclick=trSave(0)>💾 저장</button></div>`;
@@ -378,10 +379,12 @@ PN.push({id:'p1106h',ti:'11/6 패치 8',tx:'하드/헬 모드 스테이지 시�
 PN.push({id:'p1106i',ti:'11/6 패치 9',tx:'프리셋 기능 추가 · 장비 프리셋(5개, 이름 변경 가능) · 스킬/패시브 프리셋(5개, 이름 변경 가능) · 파티 프리셋(1~5번 파티, 이름 고정) · 프리셋에 저장된 장비를 분해하려 하면 경고 표시'});
 PN.push({id:'p1106j',ti:'11/6 패치 10',tx:'🍫 빼빼로 데이 이벤트가 진행됩니다 (11/11~11/18). 🛍 블랙프라이데이 이벤트가 진행됩니다 (11/27 하루 동안 가챠 가격 20% 할인 · 강화 비용(골드) 20% 할인). 로비 오른쪽 위의 이벤트 배너에서 이벤트 로드맵과 이벤트 콘텐츠를 확인하세요.'});
 PN.push({id:'p1106k',ti:'11/6 패치 11',tx:'🌙 전야제 · 🎆 후야제 시스템 추가: 이벤트 시작 하루 전(전야제)과 종료 하루 후(후야제)에는 일일 퀘스트 보상이 2배가 됩니다 · 계정 레벨업 보상 추가: 레벨이 오를 때마다 다이아 지급 (Lv1~10 💎100 / 11~20 💎150 / 21~30 💎200 / 31~40 💎250) · 최대 레벨 보상 추가: 최대 레벨(40)에서 경험치를 얻으면 얻은 만큼 골드로 지급'});
-const GD=new Date(2026,10,7,0,0,0).getTime();
-function gfx(){let n=S.nt.length;S.nt=S.nt.filter(x=>!(x.gf&&Date.now()>=GD));return S.nt.length!=n}
+PN.push({id:'p1106l',ti:'11/6 패치 12',tx:'오류 수정'});
+const GD=new Date(2026,10,7,0,0,0).getTime(),AD=new Date(2026,10,19,0,0,0).getTime();
+function gfx(){let n=S.nt.length;S.nt=S.nt.filter(x=>!(x.gf&&Date.now()>=GD)&&!(x.ap&&Date.now()>=AD));return S.nt.length!=n}
 function pnc(){PN.forEach(p=>{if(!S.pn.includes(p.id)){S.pn.push(p.id);S.nt.unshift({p:1,id:p.id,ti:p.ti,tx:p.tx,g:0})}});S.nt.forEach(n=>{if(n.p){let q=PN.find(x=>x.id==n.id);if(q){n.ti=q.ti;n.tx=q.tx}}});
- if(Date.now()<GD&&!S.pn.includes('gf1106')){S.pn.push('gf1106');S.nt.unshift({gf:1,id:'gf1106',ti:'🎁 1차 배포 테스트 지원금',tx:'1차 배포 테스트 지원금입니다',d:10000,c:500000,g:0})}gfx();sv()}
+ if(Date.now()<GD&&!S.pn.includes('gf1106')){S.pn.push('gf1106');S.nt.unshift({gf:1,id:'gf1106',ti:'🎁 1차 배포 테스트 지원금',tx:'1차 배포 테스트 지원금입니다',d:10000,c:500000,g:0})}
+ if(Date.now()<AD&&!S.pn.includes('ap1110')){S.pn.push('ap1110');S.nt.unshift({ap:1,id:'ap1110',ti:'🙇 사과 보상',tx:'보상 표기 오류에 대한 사과 보상입니다. 불편을 드려 죄송합니다.',d:3000,g:0})}gfx();sv()}
 function claimG(i){let n=S.nt[i];if(!n||!n.gf||n.g)return;if(Date.now()>=GD){gfx();nl();return alert('수령 기간이 끝났어요')}n.g=1;S.dia+=n.d;S.gold+=n.c;toast('🎁 💎'+n.d+' · 🪙'+n.c+' 수령!');sv();nl();render()}
 const QD=[['골드 1000',()=>S.gold+=1000],['장비 파편 5',()=>S.ef+=5],['스킬·패시브 파편 각 5',()=>{S.ss+=5;S.pf+=5}],['랜덤 선물 5개',()=>rg(5)],['다이아 60',()=>S.dia+=60]],QW=[['골드 10000',()=>S.gold+=10000],['장비 파편 30',()=>S.ef+=30],['스킬·패시브 파편 각 30',()=>{S.ss+=30;S.pf+=30}],['랜덤 선물 30개',()=>rg(30)],['다이아 200',()=>S.dia+=200]];
 function qs(){let t=today(),w=rw();if(!S.dq||S.dq.d!=t)S.dq={d:t,x:{},cl:[0,0,0,0,0]};if(!S.wq||S.wq.w!=w)S.wq={w,att:0,raid:0,dun:0,upg:0,stg:0,cl:[0,0,0,0,0]}}
